@@ -15,7 +15,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 
-group = 'com.example'
+group = 'com.curation'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
@@ -28,6 +28,7 @@ configurations {
 }
 
 dependencies {
+
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-devtools')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
@@ -35,5 +36,4 @@ dependencies {
 	compile('mysql:mysql-connector-java')
 	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-
 }

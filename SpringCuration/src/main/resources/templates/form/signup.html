@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+      <form class="form-signin" action="Signup" method="post">
+        <h5 style="color:red;" class="text-center">${requestScope.msg}</h5>
+        <h2 class="form-signin-heading text-center">ユーザー登録</h2>
+        <label for="inputEmail" class="sr-only">ユーザー名</label>
+        <input type="text" id="inputEmail" class="form-control" name="userName" placeholder="ユーザー名" value="${requestScope.user.userName}" required autofocus>
+        <label for="inputPassword" class="sr-only">パスワード</label>
+        <input type="password" id="inputPassword" class="form-control" name="password" placeholder="パスワード" required>
+        <label for="inputPassword" class="sr-only">パスワード(確認)</label>
+        <input type="password" id="confirmPassword" class="form-control" name="confirmPassword" placeholder="パスワード(確認)" required>
+        <div class="checkbox">
+        </div>
+        <button class="btn btn-lg btn-success btn-block" type="submit">登録</button>
+      </form>
+    </div>
+</body>
+</html>

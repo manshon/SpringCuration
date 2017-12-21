@@ -1,10 +1,12 @@
 package form;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SignupForm {
+public class SignupForm implements Serializable {
 
 	@NotEmpty
 	@Size(min=1,max=20)
