@@ -9,11 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 
 @Entity
+@Table(name="users")
 public class User {
 
     @Id
@@ -34,7 +36,7 @@ public class User {
     private Date updated_date;
 
     // JPA requirement
-    protected User() {}
+    public User() {}
 
     public User(String name, String password) {
         this.name = name;

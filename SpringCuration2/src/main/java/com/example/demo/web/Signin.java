@@ -1,8 +1,13 @@
 package com.example.demo.web;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,28 +19,25 @@ import com.example.demo.repository.userRepository;
 
 
 @Controller
-public class Signup{
+public class Signin{
 
 
-    @Autowired
-    private userRepository repository;
+	@Autowired userRepository repository;
 
-	@GetMapping("/signup")
+	@GetMapping("/signin")
 	public String input(@ModelAttribute SignupForm signupForm, Model model) {
-		return "signup";
+		return "signin";
 	}
 
-	@PostMapping("/signup")
-		public String addNewUser (
-				@RequestParam String name,
-				@RequestParam String password) {
-			// @ResponseBody means the returned String is the response, not a view name
-			// @RequestParam means it is a parameter from the GET or POST request
+	@PostMapping("/signin")
+	public String result(@RequestParam String name, @RequestParam String password, @Validated BindingResult result, Model model, HttpServletRequest request) {
 
-			User user = new User();
-			user.setName(name);
-			user.setPassword(password);
-			repository.save(user);
+		if(result.hasErrors()) {
 			return "signin";
+		}
+		User user = repository.findByName(name);
+		HttpSession session = request.getSession();
+		session.setAttribute("user", user);
+		return "redirect:/community";
 	}
 }
