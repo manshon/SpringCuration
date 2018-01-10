@@ -39,8 +39,8 @@
             <span class="icon-bar"></span>
           </button>
           <ul class="nav navbar-nav navbar-left">
-              <li><a class="navbar-brand" href="User">${sessionScope.user.userName}</a></li>
-              <li><a class="navbar-brand" href="Community">ホーム</a></li>
+              <li><a class="navbar-brand" href="/user"><div th:text="${user.name}" /></a></li>
+              <li><a class="navbar-brand" href="/community">ホーム</a></li>
           </ul>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -62,14 +62,14 @@
         <div class="col-sm-2 col-md-2 sidebar">
            <ul class="nav nav-sidebar">
              <li class="text-center">フォローしているコミュニティ</li>
-             <c:forEach var="community" items="${communityList}" >
-             <c:if test="${selectedCommunityId == community.id }">
+             <ul th:each="community : ${communityList}" >
+             <div th:if="${selectedCommunityId == community.id }">
                <li class="active"><a href="Community?communityId=${community.id}">${community.name}</a></li>
-             </c:if>
-             <c:if test="${selectedCommunityId != community.id }">
+             </div>
+             <div th:if="${selectedCommunityId != community.id }">
                <li><a href="Community?communityId=${community.id}">${community.name}</a></li>
-             </c:if>
-             </c:forEach>
+             </div>
+             </ul>
            </ul>
            <ul class="nav nav-sidebar">
              <li class="text-center" style="margin-top:30px;">管理しているコミュニティ</li>

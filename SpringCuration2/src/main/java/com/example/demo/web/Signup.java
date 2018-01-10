@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.form.SignupForm;
 import com.example.demo.model.User;
-import com.example.demo.repository.userRepository;
+import com.example.demo.repository.UserRepository;
 
 
 @Controller
@@ -18,7 +18,7 @@ public class Signup{
 
 
     @Autowired
-    private userRepository repository;
+    private UserRepository repository;
 
 	@GetMapping("/signup")
 	public String input(@ModelAttribute SignupForm signupForm, Model model) {
