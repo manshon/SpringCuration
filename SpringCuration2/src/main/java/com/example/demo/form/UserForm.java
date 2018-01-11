@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class SigninForm implements Serializable{
+public class UserForm implements Serializable{
 	@NotEmpty(message="名前を入力してください")
 	@Size(min=1,max=20)
 	private String name;

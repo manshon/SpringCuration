@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +30,14 @@ public class UserService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
+	private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
+
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sf){
+		this.sessionFactory = sf;
+	}
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -43,16 +54,27 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void registerAdmin(String username, String password, String mailAddress) {
+    public void registerAdmin(String username, String password) {
         User user = new User(username, passwordEncoder.encode(password));
 //        user.setAdmin(true);
         repository.save(user);
     }
 
     @Transactional
-    public void registerUser(String username, String password, String mailAddress) {
+    public void registerUser(String username, String password) {
         User user = new User(username, passwordEncoder.encode(password));
         repository.save(user);
     }
+
+//    @Transactional
+//    public void editUser(String username, String password) {
+//    		User user = new User(username, passwordEncoder.encode(password));
+//    		repository
+//
+//    }
+    @Transactional
+	public void updateUser(String password, Long userId) {
+    		repository.updateUser(password, userId);
+	}
 
 }

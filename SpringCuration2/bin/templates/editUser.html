@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
   <head>
@@ -23,7 +22,7 @@
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="/js/ie-emulation-modes-warning.js"></script>
+    <script src="js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -44,7 +43,7 @@
             <span class="icon-bar"></span>
           </button>
           <ul class="nav navbar-nav navbar-left">
-              <li><a class="navbar-brand" href="/user"><div th:text="${user.name}" /></a></li>
+              <li><a class="navbar-brand" href="/user"><div th:text="${user.name}"/></a></li>
               <li><a class="navbar-brand" href="/community">ホーム</a></li>
           </ul>
         </div>
@@ -56,31 +55,38 @@
       </div>
     </nav>
 
-    <div class="main">
-      <div class="col-sm-3 col-lg-3">
+        <div class="container">
+          <div class="" style="margin-bottom:100px;">
 
-      </div>
-      <div class="information col-sm-6 col-lg-6 ">
-      	<p>${msg}</p>
-        <h1>ユーザー情報</h1>
-        <ul class="list-group">
-        	<li th:inline="text" class="list-group-item">ユーザー名： [[${user.name}]]</li>
-        	<li th:inline="text" class="list-group-item">投稿数：${numOfPosts}</li>
-        </ul>
-        <form th:action="@{/editUser}" class="btn-group" role="group">
-        	<button type="submit" class="btn btn-default">プロフィール更新</button>
-        </form>
-        <div class="" style="margin:20px 0px 40px;">
+          </div>
+          <p class="text-center" style="color:red;">${msg }</p>
+          <form class="form-horizontal" th:action="@{/editUser}" th:object="${UserForm}" method="post">
+          	<div class="form-group">
+          		<label class="col-sm-2 control-label" for="InputText">ユーザー名</label>
+          		<div class="col-sm-10">
+          		    <input type="hidden" name="name" value="${user.name}">
+          			<label class="form-control" th:text="${user.name}"></label>
+          			<p>名前は変更できません</p>
+          		</div>
+          	</div>
+          	<div class="form-group">
+          		<label class="col-sm-2 control-label" for="InputPassword">password</label>
+          		<div class="col-sm-10">
+          			<input type="password" class="form-control" id="InputPassword" name="password" placeholder="パスワード" required>
+          		</div>
+          	</div>
+            <div class="form-group">
+          		<label class="col-sm-2 control-label" for="InputPassword" >password（確認）</label>
+          		<div class="col-sm-10">
+          			<input type="password" class="form-control" id="InputPassword" name="confirmPassword" placeholder="パスワード" required>
+          		</div>
+          	</div>
+            <button type="submit" class="btn btn-default pull-right">更新</button>
+          </form>
+          </div>
 
-        </div>
-        <div class="list-group">
-          <a class="list-group-item" href="/myArticle">自分の記事一覧</a>
-          <a class="list-group-item" href="/myCommunity">コミュニティ管理</a>
-          <a class="list-group-item" href="/createCommunity">コミュニティ作成</a>
-          <a class="list-group-item" href="/searchCommunity">コミュニティを探す</a>
-        </div>
-      </div>
-    </div>
+
+
 
 
 

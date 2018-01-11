@@ -21,7 +21,7 @@ public class Signin{
 
 	@Autowired UserRepository repository;
 
-	@GetMapping("/signin")
+	@GetMapping("/")
 	public String input(@ModelAttribute SignupForm signupForm, Model model) {
 		return "signin";
 	}
@@ -35,7 +35,7 @@ public class Signin{
 //		return "redirect:/community";
 //	}
 
-	@PostMapping("/signin")
+	@PostMapping("/")
 	public String index(@RequestParam String name, @RequestParam String password, HttpSession session) {
 //	    Authentication authentication = (Authentication) principal;
 //	    User user = (User) authentication.getPrincipal();

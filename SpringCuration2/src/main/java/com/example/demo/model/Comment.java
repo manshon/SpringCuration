@@ -36,6 +36,12 @@ public class Comment {
     @Temporal(TemporalType.TIMESTAMP)
     @Column
 	private Date updatedDate;
+    
+
+	@PrePersist
+    public void prePersist() {
+        this.createdDate = new Date();
+    }
 
 
     public Long getId() {
@@ -97,11 +103,6 @@ public class Comment {
 		this.updatedDate = updatedDate;
 	}
 
-
-	@PrePersist
-    public void prePersist() {
-        this.createdDate = new Date();
-    }
 
 
 }
