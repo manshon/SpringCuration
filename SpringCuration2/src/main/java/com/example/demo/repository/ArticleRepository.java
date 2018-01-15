@@ -10,4 +10,6 @@ import com.example.demo.model.Article;
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {
 	public List<Article> findByContributorId(Long id);
+
+	public List<Article> findByCommunityId(Long id);
 }

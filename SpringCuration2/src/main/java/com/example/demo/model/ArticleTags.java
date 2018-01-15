@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,6 +32,11 @@ public class ArticleTags {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
 	private Date createdDate;
+
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(nullable=false, insertable=false, updatable=false, name="id")
+    private Article article;
 
 
     @PrePersist
@@ -68,6 +76,18 @@ public class ArticleTags {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+
+
+	public Article getArticle() {
+		return article;
+	}
+
+
+
+	public void setArticle(Article article) {
+		this.article = article;
 	}
 
 }

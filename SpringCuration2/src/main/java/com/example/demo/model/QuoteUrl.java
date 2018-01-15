@@ -29,6 +29,9 @@ public class QuoteUrl {
     @Column(updatable = false)
 	private Date createdDate;
 
+//	@JoinColumn(insertable=false,updatable=false, name="aritlceId")
+//	private Article article;
+
 
     @PrePersist
     public void prePersist() {

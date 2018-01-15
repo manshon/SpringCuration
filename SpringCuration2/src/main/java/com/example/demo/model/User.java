@@ -1,71 +1,98 @@
 package com.example.demo.model;
 
-
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String password;
+	@Column(nullable = false)
+	private String password;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(updatable = false)
-    private Date created_date;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(updatable = false)
+	private Date created_date;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated_date;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updated_date;
 
-    // JPA requirement
-    public User() {}
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	private Set<Community> adminCommunities;
 
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
+	// failed to lazily initialize a collection of role: com.example.demo.model.User.followCommunities, could not initialize proxy - no Session
 
-    @PrePersist
-    public void prePersist() {
-        this.created_date = new Date();
-    }
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "followUsers")
+	private Set<Community> followCommunities;
 
-    @Override
-    public String toString() {
-        return String.format("Message[id=%d, name='%s', text='%s']", id, name);
-    }
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "adminUser")
+	private Set<Article> adminArticles;
 
-    public Long getId() {
-        return id;
-    }
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
+			CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "likeUsers")
+	private Set<Article> likeArticles;
 
-    public String getName() {
-        return name;
-    }
+	// mappedBy reference an unknown target entity property:
+	// com.example.demo.model.Article.adminUsers in
+	// com.example.demo.model.User.adminArticles
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	// JPA requirement
+	public User() {
 
-    public String getPassword() {
+	}
+
+	public User(String name, String password) {
+		this.name = name;
+		this.password = password;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		this.created_date = new Date();
+	}
+
+	// @Override
+	// public String toString() {
+	// return String.format("Message[id=%d, name='%s', text='%s']", id, name);
+	// }
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPassword() {
 		return password;
 	}
 
@@ -74,7 +101,64 @@ public class User {
 	}
 
 	public Date getCreatedAt() {
-        return created_date;
-    }
+		return created_date;
+	}
+
+	public Date getCreated_date() {
+		return created_date;
+	}
+
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+
+	public Date getUpdated_date() {
+		return updated_date;
+	}
+
+	public void setUpdated_date(Date updated_date) {
+		this.updated_date = updated_date;
+	}
+
+	public Set<Community> getAdminCommunities() {
+		return adminCommunities;
+	}
+
+	public void setAdminCommunities(Set<Community> adminCommunities) {
+		this.adminCommunities = adminCommunities;
+	}
+
+	public Set<Community> getFollowCommunities() {
+		return followCommunities;
+	}
+
+	public void setFollowCommunities(Set<Community> followCommunities) {
+		this.followCommunities = followCommunities;
+	}
+
+	public Set<Article> getAdminArticles() {
+		return adminArticles;
+	}
+
+	public void setAdminArticles(Set<Article> adminArticles) {
+		this.adminArticles = adminArticles;
+	}
+
+	public Set<Article> getLikeArticles() {
+		return likeArticles;
+	}
+
+	public void setLikeArticles(Set<Article> likeArticles) {
+		this.likeArticles = likeArticles;
+	}
+
+	public void addFollowCommunity(Community tempCommunity) {
+		if (tempCommunity != null) {
+			if (followCommunities == null) {
+				followCommunities = new HashSet<Community>();
+			}
+			followCommunities.add(tempCommunity);
+		}
+	}
 
 }

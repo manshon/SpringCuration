@@ -7,22 +7,22 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="teeth.ico">
+    <link rel="icon" th:href="@{/teeth.ico}">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>Edit User</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link th:href="@{/css/jumbotron-narrow.css}" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="js/ie-emulation-modes-warning.js"></script>
+    <script src="@{/js/ie-emulation-modes-warning.js}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -43,7 +43,7 @@
             <span class="icon-bar"></span>
           </button>
           <ul class="nav navbar-nav navbar-left">
-              <li><a class="navbar-brand" href="/user"><div th:text="${user.name}"/></a></li>
+              <li><a class="navbar-brand" href="/user" th:text="${user.name}"></a></li>
               <li><a class="navbar-brand" href="/community">ホーム</a></li>
           </ul>
         </div>

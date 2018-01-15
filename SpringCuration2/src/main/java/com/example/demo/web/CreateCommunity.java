@@ -29,7 +29,7 @@ public class CreateCommunity {
 	public String postCreateCommunity(@RequestParam String name, @RequestParam String tags,
 			@RequestParam String content, HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
-		communityService.registerCommunity(name, user.getId(), content);
+		communityService.registerCommunity(name, user.getId(), content, tags);
 		model.addAttribute("user", user);
 		return "redirect:/myCommunity";
 	}

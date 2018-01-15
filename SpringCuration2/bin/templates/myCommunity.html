@@ -7,22 +7,22 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="teeth.ico">
+    <link rel="icon" th:href="@{/teeth.ico}">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>Show Admin Community</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="js/ie-emulation-modes-warning.js"></script>
+    <script src="@{/js/ie-emulation-modes-warning.js}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -43,13 +43,13 @@
             <span class="icon-bar"></span>
           </button>
           <ul class="nav navbar-nav navbar-left">
-              <li><a class="navbar-brand" href="/user"><div th:text="${user.name}" /></a></li>
+              <li><a class="navbar-brand" href="/user" th:text="${user.name}"></a></li>
               <li><a class="navbar-brand" href="/community">ホーム</a></li>
           </ul>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="Logout">ログアウト</a></li>
+            <li><a href="/logout">ログアウト</a></li>
           </ul>
         </div>
       </div>
@@ -69,9 +69,9 @@
               <h2 th:text="${community.name }" ></h2>
               <p th:text="${community.content }"></p>
               <p>
-                <a class="btn btn-info" href="CommunityDetail?communityId=${community.id }" role="button">詳細 »</a>
-                <a class="btn btn-primary" href="EditCommunityDetail?communityId=${community.id }" role="button">編集 »</a>
-                <a class="btn btn-danger pull-right" href="DestroyCommunity?communityId=${community.id }" role="button">削除 »</a>
+                <a class="btn btn-info" th:href="@{'/detailCommunity/' + ${community.id}}" role="button">詳細 »</a>
+                <a class="btn btn-primary" th:href="@{'/editCommunity/' + ${community.id}}" role="button">編集 »</a>
+                <a class="btn btn-danger pull-right" th:href="@{'/deleteCommunity/' + ${community.id }}" role="button">削除 »</a>
               </p>
               </div>
             </div>

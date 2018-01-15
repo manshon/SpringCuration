@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
-import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.model.Community;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
@@ -23,6 +24,10 @@ public class UserService implements UserDetailsService {
     private UserRepository repository;
 
     @Autowired
+    private CommunityRepository communityRepository;
+
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Bean
@@ -30,13 +35,13 @@ public class UserService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-	private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
-
-	private SessionFactory sessionFactory;
-
-	public void setSessionFactory(SessionFactory sf){
-		this.sessionFactory = sf;
-	}
+//	private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
+//
+//	private SessionFactory sessionFactory;
+//
+//	public void setSessionFactory(SessionFactory sf){
+//		this.sessionFactory = sf;
+//	}
 
 
     @Override
@@ -77,4 +82,61 @@ public class UserService implements UserDetailsService {
     		repository.updateUser(password, userId);
 	}
 
+    @Transactional
+    public boolean isFollowAnyCommunity(Long userId) {
+    		User user = repository.findById(userId);
+    		Set<Community> community = user.getFollowCommunities();
+    		if(!community.isEmpty()) {
+    			return true;
+    		}else {
+    			return false;
+    		}
+    }
+
+
+    @Transactional
+    public void followCommunity(Long userId, Long communityId) {
+    		User user = repository.findById(userId);
+    		Community community = communityRepository.findById(communityId);
+    		Set<Community> followedCommunity = user.getFollowCommunities();
+
+    		user.addFollowCommunity(community);
+    		community.addUser(user);
+    		repository.save(user);
+    		communityRepository.save(community);
+    }
+
+    @Transactional
+    public void unFollowCommunity(Long userId, Long communityId) {
+		User user = repository.findById(userId);
+		Community community = communityRepository.findById(communityId);
+		Set<Community> followedCommunity = user.getFollowCommunities();
+		Set<User> followUsers = community.getFollowUsers();
+
+		followedCommunity.remove(community);
+		followUsers.remove(user);
+
+		user.setFollowCommunities(followedCommunity);
+		community.setFollowUsers(followUsers);
+		repository.save(user);
+		communityRepository.save(community);
+    }
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
