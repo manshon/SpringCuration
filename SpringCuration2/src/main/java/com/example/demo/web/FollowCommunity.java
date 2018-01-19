@@ -22,20 +22,18 @@ public class FollowCommunity {
 	@Autowired
 	UserRepository userRepository;
 
-
 	@Autowired
 	UserService userService;
 
-
 	@PostMapping("/followCommunity")
-	public String followCommunity(@RequestParam("communityId") Long communityId, HttpSession session, Model model, User user) {
+	public String followCommunity(@RequestParam("communityId") Long communityId, HttpSession session, Model model,
+			User user) {
 		user = (User) session.getAttribute("user");
 		com.example.demo.model.Community community = communityRepository.findById(communityId);
-		System.out.println(communityId);
 
-		if(userRepository.existsByIdAndFollowCommunities(user.getId(), community)) {
+		if (userRepository.existsByIdAndFollowCommunities(user.getId(), community)) {
 			userService.unFollowCommunity(user.getId(), communityId);
-		}else {
+		} else {
 			userService.followCommunity(user.getId(), communityId);
 		}
 

@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{/teeth.ico}">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>User Ioformation</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -65,7 +65,7 @@
         <h1>ユーザー情報</h1>
         <ul class="list-group">
         	<li th:inline="text" class="list-group-item">ユーザー名： [[${user.name}]]</li>
-        	<li th:inline="text" class="list-group-item">投稿数：${numOfPosts}</li>
+        	<li th:inline="text" class="list-group-item">投稿数：[[${numOfPosts}]]</li>
         </ul>
         <form th:action="@{/editUser}" class="btn-group" role="group">
         	<button type="submit" class="btn btn-default">プロフィール更新</button>

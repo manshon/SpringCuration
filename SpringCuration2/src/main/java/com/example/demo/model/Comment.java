@@ -36,6 +36,8 @@ public class Comment {
     @Temporal(TemporalType.TIMESTAMP)
     @Column
 	private Date updatedDate;
+    
+    
 
 //    @ManyToOne(fetch=FetchType.EAGER)
 //    @JoinColumn(nullable=false, insertable=false,updatable=false, name="id")

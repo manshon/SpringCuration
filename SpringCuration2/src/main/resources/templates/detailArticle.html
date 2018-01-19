@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/teeth.ico}">
+
+    <title>Detail Article</title>
+
+    <link th:href="@{/css/common.css}" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/starter-template.css}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <ul class="nav navbar-nav navbar-left">
+              <li><a class="navbar-brand" href="/user" th:text="${user.name}"></a></li>
+              <li><a class="navbar-brand" href="/community">ホーム</a></li>
+          </ul>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout">ログアウト</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+    </nav>
+
+    <div class="container">
+
+      <div class="header" style="margin-bottm:10px">
+        <div class="left pull-left">
+          <h1 th:text="${article.title }"></h1>
+      <!--     <%-- <h4>タグ:${tagString }</h4> --% -->
+          <h4>＜タグ＞</h4>
+          <div th:each="tag : ${article.tags }">
+           <a th:href="@{'/searchArticle/' + ${article.communityId} + '&' + ${tag.tag}}" th:text="${tag.tag}"></a>
+          </div>
+        </div>
+
+        <div class="right pull-right">
+          <form th:if="${article.adminUser.id == user.id}" class="" action="/editArticle">
+            <input type="hidden" name="articleId" value="${article.id }">
+            <button type="submit" name="button" class="btn btn-info ">
+            編集する
+            </button>
+          </form>
+        <h4 th:inline="text">投稿者：[[${article.adminUser.name }]]</h4>
+        <h5 th:text="${'(作成日時)' + #dates.format(article.createdDate, 'yyyy/MM/dd HH:mm')}"></h5>
+        <c:if test="${createdDateIsNotUpdateDate}">
+          <h5><fmt:formatDate value="${article.updateDate}" pattern="yyyy/MM/dd HH:mm"/>(最終更新日時)</h5>
+        </c:if>
+        <p th:inline="text">[[${article.likes}]]いいね</p>
+        <div th:if="${article.contributorId != user.id }">
+            <a th:if="${isLike }" class="btn btn-info" th:href="@{'/like/' + '?articleId=' + ${article.id } + '&path=detailArticle'}" role="button">いいね済み</a>
+            <a th:if="${!isLike}" class="btn btn-success" th:href="@{'/like/' + '?articleId=' + ${article.id } + '&path=detailArticle'}" role="button">いいね</a>
+        </div>
+        </div>
+      </div>
+
+        <div class="col-lg-12 col-sm-12" style="border-top:solid 1px #c0c0c0;padding-top:10px;padding-bottom:10px;margin-top:5px;">
+        <pre class="lead" th:utext="${article.content }"></pre>
+        <p>引用url</p>
+          <p th:each="url : ${article.quoteUrl }">
+          	<a href="${url }" th:text="${url.url}"></a>
+          </p>
+        </div>
+
+<!-- コメントフォーム -->
+      <div class="col-lg-12 col-sm-12" style="border-top:solid 1px #c0c0c0;">
+        <form class="" action="AddComment" method="post">
+          <input type="hidden" name="articleId" value="${article.id }">
+          <label>コメント：</label><br>
+          <textarea name="comment" rows="8" cols="80"></textarea>
+          <button type="submit" name="button" class="btn btn-primary">投稿</button>
+        </form>
+      </div>
+
+<!-- コメントを表示 -->
+      <div class="col-lg-12 col-sm-12">
+        <h2>コメント一覧</h2>
+
+        <div th:each="comment : ${article.comment }">
+          <h5>${comment.contributor }(<fmt:formatDate value="${comment.updateDate}" pattern="yyyy/MM/dd HH:mm" />)</h5>
+            <c:if test="${comment.contributor==user.userName }">
+             <p class="pull-right">
+               <a class="btn btn-danger " href="DeleteComment?commentId=${comment.id }&articleId=${article.id}" role="button">削除</a>
+              </p>
+            </c:if>
+          <p>${comment.content }</p>
+        </div>
+
+      </div>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

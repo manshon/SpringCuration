@@ -12,7 +12,7 @@ public class UserForm implements Serializable{
 	private String name;
 
 	@NotEmpty(message="パスワードを入力してください")
-	@Size(min=4, max=20)
+	@Size(min=1, max=20)
 	private String password;
 
 	public String getName() {

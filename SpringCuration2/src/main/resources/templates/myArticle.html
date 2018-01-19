@@ -22,7 +22,7 @@
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="@{/js/ie-emulation-modes-warning.js}"></script>
+    <script src="js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -51,41 +51,36 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/logout">ログアウト</a></li>
           </ul>
-          <form class="navbar-form navbar-right" action="SearchMyArticle" method="get">
+          <form class="navbar-form navbar-right" th:action="@{/searchMyArticle}" method="get">
             <input type="text" class="form-control" name="keywords" placeholder="Search...">
           </form>
         </div>
       </div>
     </nav>
 
-    <div class="container">
-      <div class="row">
+        <div class="col-lg-2 col-sm-2">
+
+        </div>
 
         <!-- main -->
-        <div class="main">
-          <div class="row">
+        <div class="main col-lg-8 col-sm-2">
 
 
-             <div th:each="article : ${articleList}" >
-               <div class="col-xs-6 col-lg-4 " >
+               <div th:each="article : ${articleList}" class="col-xs-6 col-lg-4 " >
                <div class="well" style="border:solid 1px #c0c0c0">
-                 <h2>${article.title }</h2>
-                 <h5 class="" th:inline="text">[[${article.likes }]]いいね</h5>
+                 <h2 th:text="${article.title }"></h2>
+                 <!-- <h5 th:if="${article.likes}" th:inline="text">[[${article.likes }]]いいね</h5> -->
                  <p class="article-content" th:text="${article.content }"></p>
                   <p>
-	                <a class="btn btn-info" href="/articleDetail?articleId=${article.id }" role="button">詳細 »</a>
-	                <a class="btn btn-primary" href="/editArticle?articleId=${article.id }" role="button">編集</a>
-	                <a class="btn btn-danger pull-right" href="/destroyArticle?articleId=${article.id }" role="button">削除</a>
+	                <a class="btn btn-info" th:href="@{'/detailArticle/' + ${article.id}}" role="button">詳細 »</a>
+	                <a class="btn btn-primary" th:href="@{'/editArticle/' + ${article.id }}" role="button">編集</a>
+	                <a class="btn btn-danger pull-right" th:href="@{'/deleteArticle/' + ${article.id }}" role="button">削除</a>
                 </p>
                 </div>
                </div>
-             </div>
 
+        </div><!--  main -->
 
-          </div><!--/row-->
-        </div>
-      </div>
-    </div>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script>
 	$(function(){

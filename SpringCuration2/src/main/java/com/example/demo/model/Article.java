@@ -54,19 +54,25 @@ public class Article {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedDate;
 
+	private Long likes;
+
 	// テーブルの結合
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "aritlceId")
+	@JoinColumn(name = "articleId")
 	private Set<ArticleTags> tags;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name="articleId")
+	@JoinColumn(name = "articleId")
 	private Set<Comment> comment;
 
 	@ManyToOne
 	@JoinColumn(nullable = false, insertable = false, updatable = false, name = "contributorId")
 	private User adminUser;
+
+	@ManyToOne
+	@JoinColumn(insertable = false, updatable = false, name = "communityId")
+	private Community belongCommunity;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
 			CascadeType.REFRESH }, fetch = FetchType.LAZY)
@@ -81,6 +87,17 @@ public class Article {
 	// @JoinColumn(nullable = false, insertable = false, updatable = false, name =
 	// "communityId")
 	// private Community community;
+
+	public Article() {
+
+	}
+
+	public Article(String title, String content, Long conditions) {
+		super();
+		this.title = title;
+		this.content = content;
+		this.conditions = conditions;
+	}
 
 	@PrePersist
 	public void prePersist() {
@@ -151,6 +168,14 @@ public class Article {
 		this.updatedDate = updatedDate;
 	}
 
+	public Long getLikes() {
+		return likes;
+	}
+
+	public void setLikes(Long likes) {
+		this.likes = likes;
+	}
+
 	public Long getConditions() {
 		return conditions;
 	}
@@ -183,14 +208,48 @@ public class Article {
 		this.quoteUrl = quoteUrl;
 	}
 
+	public User getAdminUser() {
+		return adminUser;
+	}
+
+	public void setAdminUser(User adminUser) {
+		this.adminUser = adminUser;
+	}
+
+	public Set<User> getLikeUsers() {
+		return likeUsers;
+	}
+
+	public void setLikeUsers(Set<User> likeUsers) {
+		this.likeUsers = likeUsers;
+	}
+
+	public Community getBelongCommunity() {
+		return belongCommunity;
+	}
+
+	public void setBelongCommunity(Community belongCommunity) {
+		this.belongCommunity = belongCommunity;
+	}
+
 	public void addTags(ArticleTags tempTag) {
 		if (tempTag != null) {
 			if (tags == null) {
 				tags = new HashSet<>();
 			}
 			tags.add(tempTag);
-			tempTag.setArticle(this);
+			// tempTag.setArticle(this);
 		}
 	}
+
+	public void addLikeUser(User tempUser) {
+		if(tempUser != null) {
+			if(likeUsers == null) {
+				likeUsers = new HashSet<>();
+			}
+			likeUsers.add(tempUser);
+		}
+	}
+
 
 }

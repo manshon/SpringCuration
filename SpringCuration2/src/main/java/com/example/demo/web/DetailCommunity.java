@@ -43,7 +43,6 @@ public class DetailCommunity {
 //		}
 		Community community = repository.findById(communityId);
 		Set<Article> articles = community.getArticles();
-		System.out.println(userService.isFollowAnyCommunity(user.getId()));
 		boolean isFollow = userService.isFollowAnyCommunity(user.getId());
 
 		model.addAttribute("community", community);

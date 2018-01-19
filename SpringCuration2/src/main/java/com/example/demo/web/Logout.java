@@ -17,9 +17,7 @@ public class Logout {
 	@GetMapping("/logout")
 	public String logout(HttpSession session, User user) {
 		user = (User) session.getAttribute("user");
-		System.out.println(user.getName());
 		session.invalidate();
-		System.out.println("logout");
 		return "redirect:/";
 	}
 }

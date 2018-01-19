@@ -53,7 +53,7 @@ public class User {
 	private Set<Article> adminArticles;
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "likeUsers")
+			CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "likeUsers")
 	private Set<Article> likeArticles;
 
 	// mappedBy reference an unknown target entity property:
@@ -158,6 +158,24 @@ public class User {
 				followCommunities = new HashSet<Community>();
 			}
 			followCommunities.add(tempCommunity);
+		}
+	}
+
+	public void addAdminArticle(Article tempArticle) {
+		if(tempArticle != null) {
+			if(adminArticles == null) {
+				adminArticles = new HashSet<Article>();
+			}
+			adminArticles.add(tempArticle);
+		}
+	}
+
+	public void addLikeArticles(Article tempArticle) {
+		if(tempArticle != null) {
+			if(likeArticles == null) {
+				likeArticles = new HashSet<>();
+			}
+			likeArticles.add(tempArticle);
 		}
 	}
 

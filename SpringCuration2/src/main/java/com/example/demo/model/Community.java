@@ -59,7 +59,6 @@ public class Community {
 	private Set<User> followUsers;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "communityId")
 	private Set<Article> articles;
 
 	public Community() {
@@ -167,6 +166,11 @@ public class Community {
 			}
 			articles.add(tempArticle);
 		}
+	}
+
+	public void removeArticle(Article tempArticle) {
+		boolean isRemove = this.getArticles().remove(tempArticle);
+
 	}
 
 	public void addUser(User tempUser) {

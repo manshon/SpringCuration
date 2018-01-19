@@ -47,7 +47,9 @@
     <div class="container">
       <form class="form-signin" th:action="@{/}" th:object="${UserForm}" method="post">
         <h5 class="text-center" style="color:red;"></h5>
+        <p th:if="${validationError}" th:text="${validationError}">validation error</p>
         <h2 class="form-signin-heading text-center">ログイン</h2>
+        <p th:if="${errorMsg}" th:text="${errorMsg}" class="text-center" style="color:red;"></p>
         <label for="inputEmail" class="sr-only">ユーザー名</label>
         <input type="text" id="inputEmail" class="form-control" name="name" placeholder="ユーザー名"  required autofocus>
         <label for="inputPassword" class="sr-only">パスワード</label>
