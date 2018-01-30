@@ -54,7 +54,7 @@ public class Community {
 
 		if(communityId == null ) {
 			if (userService.isFollowAnyCommunity(user.getId())) {
-				followCommunityList = new ArrayList<>(user.getFollowCommunities());
+				followCommunityList = new ArrayList<>(repository.findById(user.getId()).getFollowCommunities());
 				Long firstCommunityId = followCommunityList.get(0).getId();
 				return "redirect:/community/" + String.valueOf(firstCommunityId);
 	//			communityId = firstCommunityId;

@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.form.UserForm;
 import com.example.demo.model.User;
@@ -59,8 +58,7 @@ public class Signin {
 	// }
 
 	@PostMapping("/")
-	public String index(@RequestParam String name, @RequestParam String password,
-			@Validated @ModelAttribute UserForm userForm, BindingResult result, HttpSession session, Model model) {
+	public String index(@Validated @ModelAttribute UserForm userForm, BindingResult result, HttpSession session, Model model) {
 		User user = new User();
 
 		if (result.hasErrors()) {
@@ -68,15 +66,16 @@ public class Signin {
 			return input(session, userForm, model);
 		}
 
-		if(repository.findByName(name) != null) {
-			user = repository.findByName(name);
+		if(repository.findByName(userForm.getName()) != null) {
+			user = repository.findByName(userForm.getName());
 		}else {
 			model.addAttribute("errorMsg", "ユーザー名が間違っています");
 			return input(session, userForm, model);
 		}
 
+		String password = CurationHelper.encryption(userForm.getPassword());
 		// password check
-		if (!userForm.getPassword().equals(user.getPassword())) {
+		if (!password.equals(user.getPassword())) {
 			model.addAttribute("errorMsg", "パスワードが異なります");
 			return input(session, userForm, model);
 		}

@@ -174,8 +174,8 @@ public class Community {
 	}
 
 	public void addUser(User tempUser) {
-		if(tempUser != null) {
-			if(followUsers == null ) {
+		if (tempUser != null) {
+			if (followUsers == null) {
 				followUsers = new HashSet<>();
 			}
 			followUsers.add(tempUser);

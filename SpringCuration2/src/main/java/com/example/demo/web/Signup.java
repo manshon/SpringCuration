@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.form.UserForm;
-import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 
 @Controller
 public class Signup {
 
 	@Autowired
 	private UserRepository repository;
+
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/signup")
 	public String signup(@ModelAttribute UserForm userForm, Model model) {
@@ -36,11 +39,12 @@ public class Signup {
 			model.addAttribute("errorMsg", "パスワードが異なります");
 			return signup(userForm,model);
 		}
+		if(repository.findByName(userForm.getName()) != null) {
+			model.addAttribute("errorMsg", "このユーザー名は使用されています");
+			return signup(userForm,model);
+		}
 
-		User user = new User();
-		user.setName(userForm.getName());
-		user.setPassword(password);
-		repository.save(user);
+		userService.registerUser(userForm.getName(), userForm.getPassword());
 		return "signin";
 	}
 }
