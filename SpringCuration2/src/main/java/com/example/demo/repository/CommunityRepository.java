@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.Community;
+import com.example.demo.model.User;
 
 @Repository
 public interface CommunityRepository extends JpaRepository<Community, Long>, JpaSpecificationExecutor<Community> {
@@ -29,6 +30,8 @@ public interface CommunityRepository extends JpaRepository<Community, Long>, Jpa
 	public Community findById(Long id);
 
 	public void deleteById(Long id);
+
+	public List<Community> findByFollowUsersOrderByIdAsc(User user);
 
 
 }

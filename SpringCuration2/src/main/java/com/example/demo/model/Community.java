@@ -45,7 +45,7 @@ public class Community {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedDate;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "communityId")
 	private Set<CommunityTags> tags;
 

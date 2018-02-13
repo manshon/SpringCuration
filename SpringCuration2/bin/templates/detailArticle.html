@@ -68,7 +68,7 @@
         </div>
 
         <div class="right pull-right">
-          <form th:if="${article.adminUser.id == user.id}" class="" action="/editArticle">
+          <form th:if="${article.adminUser.id == user.id}" class="" th:action="@{'/editArticle/' + ${article.id}}">
             <input type="hidden" name="articleId" value="${article.id }">
             <button type="submit" name="button" class="btn btn-info ">
             編集する
@@ -76,9 +76,8 @@
           </form>
         <h4 th:inline="text">投稿者：[[${article.adminUser.name }]]</h4>
         <h5 th:text="${'(作成日時)' + #dates.format(article.createdDate, 'yyyy/MM/dd HH:mm')}"></h5>
-        <c:if test="${createdDateIsNotUpdateDate}">
-          <h5><fmt:formatDate value="${article.updateDate}" pattern="yyyy/MM/dd HH:mm"/>(最終更新日時)</h5>
-        </c:if>
+          <h5 th:if="${createdDateIsNotUpdateDate}" th:text="${'(最終更新日時)' + #dates.format(article.updatedDate, 'yyyy/MM/dd HH:mm')}">
+          </h5>
         <p th:inline="text">[[${article.likes}]]いいね</p>
         <div th:if="${article.contributorId != user.id }">
             <a th:if="${isLike }" class="btn btn-info" th:href="@{'/like/' + '?articleId=' + ${article.id } + '&path=detailArticle'}" role="button">いいね済み</a>

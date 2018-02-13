@@ -16,7 +16,7 @@ import com.example.demo.model.Community;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.web.CurationHelper;
+import com.example.demo.security.LoginUserDetails;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
-        return (UserDetails) user;
+        return new LoginUserDetails(user);
     }
 
     @Transactional
@@ -68,7 +68,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void registerUser(String username, String password) {
-        User user = new User(username, CurationHelper.encryption(password));
+        User user = new User(username, passwordEncoder.encode(password));
         repository.save(user);
     }
 
@@ -78,6 +78,7 @@ public class UserService implements UserDetailsService {
 //    		repository
 //
 //    }
+
     @Transactional
 	public void updateUser(String password, Long userId) {
     		repository.updateUser(password, userId);

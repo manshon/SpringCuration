@@ -3,6 +3,9 @@ package com.example.demo.web;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +27,10 @@ public class EditUser {
 
 	@GetMapping("/editUser")
 	public String editUser(HttpSession session, Model model,User user, UserForm userForm) {
-		user = (User) session.getAttribute("user");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails principal = (UserDetails) auth.getPrincipal();
+		user = userRepository.findByName(principal.getUsername());
+
 		model.addAttribute("userForm", userForm);
 		model.addAttribute("user", user);
 		return "editUser";
@@ -32,7 +38,10 @@ public class EditUser {
 
 	@PostMapping("/editUser")
 	public String postEditUser(HttpSession session, Model model,User user, UserForm userForm) {
-		user = (User) session.getAttribute("user");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails principal = (UserDetails) auth.getPrincipal();
+		user = userRepository.findByName(principal.getUsername());
+
 		userService.updateUser(userForm.getPassword(),user.getId());
 		model.addAttribute("user", user);
 		return "redirect:/user";

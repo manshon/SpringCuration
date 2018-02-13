@@ -106,6 +106,7 @@ public class ArticleService {
 		article.setTitle(title);
 		article.setConditions(conditions);
 		article.setContent(content);
+		article.setUpdatedDate(new java.util.Date());
 
 		articleRepository.save(article);
 		community.addArticle(article);

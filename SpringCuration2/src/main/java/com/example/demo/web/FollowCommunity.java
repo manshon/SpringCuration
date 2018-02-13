@@ -3,6 +3,9 @@ package com.example.demo.web;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +31,10 @@ public class FollowCommunity {
 	@PostMapping("/followCommunity")
 	public String followCommunity(@RequestParam("communityId") Long communityId, HttpSession session, Model model,
 			User user) {
-		user = (User) session.getAttribute("user");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails principal = (UserDetails) auth.getPrincipal();
+		user = userRepository.findByName(principal.getUsername());
+
 		com.example.demo.model.Community community = communityRepository.findById(communityId);
 
 		if (userRepository.existsByIdAndFollowCommunities(user.getId(), community)) {

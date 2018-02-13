@@ -48,6 +48,7 @@ public class CommunityService {
     			community.addTags(cTag);
     		}
     		community.setTags(tagSet);
+    		community.setContent(content);
         repository.save(community);
     }
 

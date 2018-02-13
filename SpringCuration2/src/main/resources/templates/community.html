@@ -63,13 +63,13 @@
       <div class="row">
         <!-- sidebar -->
         <div class="col-sm-2 col-md-2 sidebar">
+           <p class="text-center">フォローしているコミュニティ</p>
            <ul th:each="community : ${communityList}" class="nav nav-sidebar">
-             <li class="text-center">フォローしているコミュニティ</li>
                <li th:if="${selectedCommunityId == community.id }" class="active">
                  <a th:href="@{'/community/' + ${community.id}}" th:inline="text">[[${community.name}]]</a>
                </li>
                <li th:if="${selectedCommunityId != community.id }">
-                 <a th:href="@{'/community/'?communityId=${community.id}" th:inline="text">[[${community.name}]]</a>
+                 <a th:href="@{'/community/' + ${community.id}}" th:inline="text">[[${community.name}]]</a>
                </li>
            </ul>
            <p class="text-center" style="margin-top:20px;">管理しているコミュニティ</p>
