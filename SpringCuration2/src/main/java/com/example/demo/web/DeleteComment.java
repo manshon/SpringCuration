@@ -1,45 +1,38 @@
 package com.example.demo.web;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.demo.model.Article;
 import com.example.demo.model.User;
-import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.ArticleService;
+import com.example.demo.service.CommentService;
 
 @Controller
-public class MyArticle {
+public class DeleteComment {
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
-	private ArticleRepository articleRepository;
+	private CommentService commentService;
 
-	@Autowired
-	private ArticleService articleService;
 
-	@GetMapping("/myArticle")
-	public String myArticle(HttpSession session, Model model) {
+
+	@PostMapping("/deleteComment/{commentId}/{articleId}")
+	public String deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
 		User user = userRepository.findByName(principal.getUsername());
 
-		List<Article> articleList = articleRepository.findByContributorIdOrderByUpdatedDateDesc(user.getId());
+		commentService.deleteComment(user.getId(), commentId);
 
-		model.addAttribute("articleList", articleList);
 		model.addAttribute("user", user);
-		return "myArticle";
+		return "redirect:/detailArticle/" + String.valueOf(articleId);
 	}
 }

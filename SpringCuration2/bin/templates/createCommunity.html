@@ -59,10 +59,10 @@
 
       <div class="container">
           <div class="center-block">
-          <div class="form-area">
+          <div class="form-area" style="margin-top:30px;">
               <form role="form" th:action="@{/createCommunity}" th:object="${SigninForm}" method="post">
               <br style="clear:both">
-              			<p class="text-center" style="color:red;">${msg }</p>
+              			<p class="text-center" style="color:red;" th:text="${msg}"></p>
                           <h3 style="margin-bottom: 25px; text-align: center;">コミュニティを作る</h3>
           				<div class="form-group">
       						<input type="text" class="form-control" id="header" name="name" placeholder="コミュニティ名" required>

@@ -1,25 +1,23 @@
 package com.example.demo.web;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.demo.model.Article;
+import com.example.demo.form.CommentForm;
 import com.example.demo.model.User;
 import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ArticleService;
 
 @Controller
-public class MyArticle {
+public class AddComment {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -30,16 +28,17 @@ public class MyArticle {
 	@Autowired
 	private ArticleService articleService;
 
-	@GetMapping("/myArticle")
-	public String myArticle(HttpSession session, Model model) {
+	@PostMapping("/addComment/{articleId}")
+	public String addComment(@PathVariable Long articleId,Model model,User user,@ModelAttribute CommentForm form) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
-		User user = userRepository.findByName(principal.getUsername());
+		user = userRepository.findByName(principal.getUsername());
 
-		List<Article> articleList = articleRepository.findByContributorIdOrderByUpdatedDateDesc(user.getId());
+		articleRepository.findOne(articleId);
 
-		model.addAttribute("articleList", articleList);
-		model.addAttribute("user", user);
-		return "myArticle";
+		articleService.addComment(user.getId(),articleId, form.getContent());
+
+		return "redirect:/detailArticle/" + String.valueOf(articleId);
 	}
+
 }

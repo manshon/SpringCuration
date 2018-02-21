@@ -11,8 +11,6 @@ import com.example.demo.model.User;
 //@SessionAttributes("user")
 public class Logout {
 
-//	@Autowired
-//	HttpSession session;
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session, User user) {

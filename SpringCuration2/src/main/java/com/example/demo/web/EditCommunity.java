@@ -1,13 +1,12 @@
 package com.example.demo.web;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,10 +32,10 @@ public class EditCommunity {
 	private CommunityService communityService;
 
 	@GetMapping("editCommunity/{communityId}")
-	public String editCommunity(@PathVariable("communityId") Long communityId, HttpSession session, Model model, User user) {
+	public String editCommunity(@PathVariable("communityId") Long communityId, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
-		user = userRepository.findByName(principal.getUsername());
+		User user = userRepository.findByName(principal.getUsername());
 
 		com.example.demo.model.Community community = communityRepository.findById(communityId);
 		String stringTags = "";
@@ -57,12 +56,16 @@ public class EditCommunity {
 
 
 	@PostMapping("/editCommunity/{communityId}")
-	public String postEditCommunity(@PathVariable("communityId") Long communityId,@ModelAttribute CommunityForm form, HttpSession session, Model model, User user) {
+	public String postEditCommunity(@PathVariable("communityId") Long communityId,@ModelAttribute CommunityForm form,BindingResult result, Model model, User user) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
 		user = userRepository.findByName(principal.getUsername());
 
-//		com.example.demo.model.Community community = repository.findById(communityId);
+		if(result.hasErrors()) {
+			model.addAttribute("msg", "記入が間違っています");
+			return editCommunity(communityId, model);
+		}
+
 		communityService.editCommunity(communityId, form.getContent(), form.getTags());
 
 		model.addAttribute("user", user);

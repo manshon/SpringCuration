@@ -9,5 +9,8 @@ import com.example.demo.model.Comment;
 
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-	List<Comment> findById(Long id);
+	public List<Comment> findById(Long id);
+
+//	public void delete(Long id);
+	public List<Comment> findByArticleIdOrderByCreatedDateDesc(Long articleId);
 }

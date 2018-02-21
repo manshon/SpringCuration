@@ -1,18 +1,19 @@
 package com.example.demo.web;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.form.CommunityForm;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.CommunityService;
 
@@ -23,10 +24,13 @@ public class CreateCommunity {
 	private UserRepository userRepository;
 
 	@Autowired
-	CommunityService communityService;
+	private CommunityRepository communityRepository;
+
+	@Autowired
+	private CommunityService communityService;
 
 	@GetMapping("/createCommunity")
-	public String createCommunity(HttpSession session, Model model) {
+	public String createCommunity(@ModelAttribute CommunityForm form, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
 		User user = userRepository.findByName(principal.getUsername());
@@ -36,13 +40,22 @@ public class CreateCommunity {
 	}
 
 	@PostMapping("/createCommunity")
-	public String postCreateCommunity(@RequestParam String name, @RequestParam String tags,
-			@RequestParam String content, HttpSession session, Model model) {
+	public String postCreateCommunity(@ModelAttribute CommunityForm form,BindingResult result, Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
 		User user = userRepository.findByName(principal.getUsername());
 
-		communityService.registerCommunity(name, user.getId(), content, tags);
+		if(result.hasErrors()) {
+			model.addAttribute("msg", "記入が不十分です");
+			return createCommunity(form, model);
+		}
+
+		if(communityRepository.findByName(form.getName()) != null) {
+			model.addAttribute("msg", "このコミュニティ名は使用されています");
+			return createCommunity(form, model);
+		}
+
+		communityService.registerCommunity(form.getName(), user.getId(), form.getContent(), form.getTags());
 		model.addAttribute("user", user);
 		return "redirect:/myCommunity";
 	}

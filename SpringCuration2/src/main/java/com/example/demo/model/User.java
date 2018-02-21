@@ -52,9 +52,11 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "adminUser")
 	private Set<Article> adminArticles;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "likeUsers")
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "likeUsers")
 	private Set<Article> likeArticles;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="contributor")
+	private Set<Comment> comment;
 
 	// mappedBy reference an unknown target entity property:
 	// com.example.demo.model.Article.adminUsers in
@@ -73,6 +75,7 @@ public class User {
 	@PrePersist
 	public void prePersist() {
 		this.created_date = new Date();
+		this.updated_date = new Date();
 	}
 
 	// @Override
@@ -152,6 +155,14 @@ public class User {
 		this.likeArticles = likeArticles;
 	}
 
+	public Set<Comment> getComment() {
+		return comment;
+	}
+
+	public void setComment(Set<Comment> comment) {
+		this.comment = comment;
+	}
+
 	public void addFollowCommunity(Community tempCommunity) {
 		if (tempCommunity != null) {
 			if (followCommunities == null) {
@@ -176,6 +187,15 @@ public class User {
 				likeArticles = new HashSet<>();
 			}
 			likeArticles.add(tempArticle);
+		}
+	}
+
+	public void addComment(Comment tempComment) {
+		if(tempComment != null) {
+			if(comment == null) {
+				comment = new HashSet<>();
+			}
+			comment.add(tempComment);
 		}
 	}
 

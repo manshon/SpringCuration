@@ -61,4 +61,5 @@ public class CurationHelper {
 		UserDetails principal = (UserDetails) auth.getPrincipal();
 		return userRepository.findByName(principal.getUsername());
 	}
+	
 }

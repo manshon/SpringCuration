@@ -50,6 +50,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
+            <li><a th:href="@{/myArticle}">自分の記事</a></li>
             <li><a href="/logout">ログアウト</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -63,7 +64,7 @@
       <!--     <%-- <h4>タグ:${tagString }</h4> --% -->
           <h4>＜タグ＞</h4>
           <div th:each="tag : ${article.tags }">
-           <a th:href="@{'/searchArticle/' + ${article.communityId} + '&' + ${tag.tag}}" th:text="${tag.tag}"></a>
+           <a th:href="@{'/searchArticle/' + '?communityId=' + ${article.communityId} + '&keywords=' + ${tag.tag}}" th:text="${tag.tag}"></a>
           </div>
         </div>
 
@@ -90,16 +91,15 @@
         <pre class="lead" th:utext="${article.content }"></pre>
         <p>引用url</p>
           <p th:each="url : ${article.quoteUrl }">
-          	<a href="${url }" th:text="${url.url}"></a>
+          	<a th:href="${url.url }" th:text="${url.url}" target="_blank"></a>
           </p>
         </div>
 
 <!-- コメントフォーム -->
       <div class="col-lg-12 col-sm-12" style="border-top:solid 1px #c0c0c0;">
-        <form class="" action="AddComment" method="post">
-          <input type="hidden" name="articleId" value="${article.id }">
+        <form class="" th:action="@{'/addComment/' + ${article.id}}" th:object="${CommentForm}" method="post">
           <label>コメント：</label><br>
-          <textarea name="comment" rows="8" cols="80"></textarea>
+          <textarea name="content" rows="8" cols="80" required></textarea>
           <button type="submit" name="button" class="btn btn-primary">投稿</button>
         </form>
       </div>
@@ -108,14 +108,16 @@
       <div class="col-lg-12 col-sm-12">
         <h2>コメント一覧</h2>
 
-        <div th:each="comment : ${article.comment }">
-          <h5>${comment.contributor }(<fmt:formatDate value="${comment.updateDate}" pattern="yyyy/MM/dd HH:mm" />)</h5>
-            <c:if test="${comment.contributor==user.userName }">
-             <p class="pull-right">
-               <a class="btn btn-danger " href="DeleteComment?commentId=${comment.id }&articleId=${article.id}" role="button">削除</a>
-              </p>
-            </c:if>
-          <p>${comment.content }</p>
+        <div th:each="comment : ${commentList}">
+          <h5 th:text="${{comment.contributor.name} + '(' + #dates.format(comment.createdDate, 'yyyy/MM/dd HH:mm') + ')' }"></h5>
+             <form class="form-group" th:action="@{'/deleteComment/' + ${comment.id } + '/' + ${article.id}}"  method="post">
+	             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+	             <p th:if="${comment.contributor.name == user.name }" class="pull-right">
+	               <button class="btn btn-danger " type="submit">削除</button>
+	             </p>
+             </form>
+             <!-- <a th:href="@{'/deleteComment/' + ${article.id}}" class="btn btn-danger pull-right">削除</a> -->
+          <p th:text="${comment.content }"></p>
         </div>
 
       </div>

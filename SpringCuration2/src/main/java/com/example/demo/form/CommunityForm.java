@@ -8,15 +8,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 public class CommunityForm implements Serializable {
 
-	@NotEmpty(message="コミュニティ名を入力してください")
-	@Size(max=30)
+	@NotEmpty(message = "コミュニティ名を入力してください")
+	@Size(max = 30)
 	private String name;
 
 	private String tags;
 
-	@NotEmpty(message="コミュニティの説明を入力してください")
+	@NotEmpty(message = "コミュニティの説明を入力してください")
 	private String content;
-
 
 	public String getName() {
 		return name;

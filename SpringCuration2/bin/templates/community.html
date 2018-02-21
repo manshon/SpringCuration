@@ -12,6 +12,8 @@
 
     <title>Home</title>
 
+    <link th:href="@{/css/src/article.css}" rel="stylesheet">
+
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
@@ -98,18 +100,18 @@
             </form>
             </div>
           </div>
+
           <div class="row">
 
-
-            <div th:each="article : ${articleList }">
-            <div th:if="${article.conditions == 1}" class="col-xs-6 col-lg-4">
-            <div class="well" style="border:solid 1px #c0c0c0;">
+            <div th:each="article : ${article }">
+            <div th:if="${article.conditions == 1}" class="col-xs-6 col-lg-4" id="articleBox" style="height:300px">
+            <div class="well" style="border:solid 1px #c0c0c0; height:280px">
               <h2 th:text="${article.title }"></h2>
               <h4 th:text="${article.adminUser.name }"></h4>
               <h5 th:inline="text" class="">[[${article.likes }]]いいね</h5>
               <p class="article-content" th:text="${article.content }"></p>
               <p>
-                <a class="btn btn-default" th:href="@{'/detailArticle/' + ${article.id }}" role="button">詳細 »</a>
+                <a class="btn btn-default" th:href="@{'/detailArticle/' + ${article.id }}" role="button" >詳細 »</a>
                   <a th:if="${article.contributorId != user.id && likeArticleIdList.contains(article.id)}" class="btn btn-info pull-right" th:href="@{'/like/' + '?articleId=' + ${article.id} + '&communityId=' + ${article.communityId} + '&path=community'}" role="button">いいね済み</a>
                   <a th:if="${article.contributorId != user.id && !likeArticleIdList.contains(article.id)}" class="btn btn-success pull-right" th:href="@{'/like/' + '?articleId=' + ${article.id} + '&communityId=' + ${article.communityId} + '&path=community'}" role="button">いいね</a>
               </p>
@@ -119,6 +121,25 @@
 
 
           </div><!--/row-->
+
+                  <div th:fragment='paginationbar'>
+            <ul>
+                <li th:class="${page.first} ? 'disabled':''" style="display:inline">
+                    <span th:if="${page.first}">←先頭</span>
+                    <a th:if="${not page.first}" th:href="@{${url}(page=0)}">←先頭</a>
+                </li>
+                <li th:each='i : ${#numbers.sequence(0, page.totalPages-1)}' th:class="(${i}==${page.number})? 'active' : ''" style="display:inline">
+                    <span th:if='${i}==${page.number}' th:text='${i+1}'>1</span>
+                    <a th:if='${i}!=${page.number}' th:href="@{${url}(page=${i})}">
+                        <span th:text='${i+1}'>1</span>
+                    </a>
+                </li>
+                <li th:class="${page.last} ? 'disabled':''" style="display:inline">
+                    <span th:if="${page.last}">末尾➝</span>
+                    <a th:if="${not page.last}" th:href="@{${url}(page=(${page.totalPages}-1))}">末尾➝</a>
+                </li>
+            </ul>
+        </div>
         </div>
       </div>
     </div>

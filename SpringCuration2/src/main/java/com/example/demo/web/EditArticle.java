@@ -48,7 +48,7 @@ public class EditArticle {
 			articleTags += tag.getTag();
 		}
 		for(QuoteUrl url : article.getQuoteUrl()) {
-			articleUrls += url.getUrl();
+			articleUrls += url.getUrl() + "\n";
 		}
 
 		model.addAttribute("articleTags", articleTags);

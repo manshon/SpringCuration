@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Article;
 import com.example.demo.model.ArticleTags;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Community;
 import com.example.demo.model.QuoteUrl;
 import com.example.demo.model.User;
 import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.ArticleTagsRepository;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.CommunityRepository;
+import com.example.demo.repository.QuoteUrlRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
@@ -28,6 +33,16 @@ public class ArticleService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private CommentRepository commentRepository;
+
+	@Autowired
+	private ArticleTagsRepository articleTagsRepository;
+
+	@Autowired
+	private QuoteUrlRepository urlRepository;
+
 
 	@Transactional
 	public List<Article> findByUserId(Long id) {
@@ -116,17 +131,30 @@ public class ArticleService {
 
 	}
 
+	@Modifying
 	@Transactional
 	public void deleteArticle(Long articleId) {
 		Article article = articleRepository.findOne(articleId);
 		Community community = article.getBelongCommunity();
-		boolean communityRemoveArticle = community.getArticles().remove(article);
-		User user = article.getAdminUser();
-		boolean userRemoveArticle = user.getAdminArticles().remove(article);
+		List<Comment> comments = commentRepository.findByArticleIdOrderByCreatedDateDesc(articleId);
+		for(Comment comment: comments) {
 
-		articleRepository.delete(articleId);
-		communityRepository.save(community);
-		userRepository.save(user);
+		}
+		boolean communityRemoveArticle = community.getArticles().remove(article);
+		User adminUser = article.getAdminUser();
+		boolean userRemoveArticle = adminUser.getAdminArticles().remove(article);
+		Set<User> likeUsers = article.getLikeUsers();
+		for(User tempUser: likeUsers) {
+			tempUser.getLikeArticles().remove(article);
+		}
+//		List<Comment> comment = new ArrayList<Comment>(article.getComment());
+//		boolean commentRemoveArticle = comment.remove(article);
+
+//		communityRepository.save(community);
+		articleRepository.delete(article);
+//		commentRepository.delete(comment);
+//		userRepository.save(user);
+
 	}
 
 	@Transactional
@@ -162,6 +190,21 @@ public class ArticleService {
 			}
 		}
 		return isLike;
+	}
+
+	@Transactional
+	public void addComment(Long userId, Long articleId, String content) {
+		Article article = articleRepository.findOne(articleId);
+		User user = userRepository.findOne(userId);
+		Comment comment = new Comment();
+		comment.setArticleId(articleId);
+		comment.setUserId(userId);
+		comment.setContent(content);
+		article.addComment(comment);
+//		user.addComment(comment);
+
+		articleRepository.save(article);
+
 	}
 
 }

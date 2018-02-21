@@ -8,4 +8,5 @@ import com.example.demo.model.ArticleTags;
 @Repository
 public interface ArticleTagsRepository extends CrudRepository<ArticleTags, Long> {
 
+
 }

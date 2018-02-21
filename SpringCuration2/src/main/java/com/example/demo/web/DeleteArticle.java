@@ -42,8 +42,11 @@ public class DeleteArticle {
 	}
 
 	@PostMapping("/deleteArticle/{articleId}")
-	public String postDeleteArticle(@PathVariable("articleId") Long articleId,HttpSession session,Model model, User user) {
-		user = (User) session.getAttribute("user");
+	public String postDeleteArticle(@PathVariable("articleId") Long articleId,Model model, User user) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails principal = (UserDetails) auth.getPrincipal();
+		user = userRepository.findByName(principal.getUsername());
+
 		articleService.deleteArticle(articleId);
 
 		model.addAttribute("user", user);

@@ -29,7 +29,7 @@ public class Community {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique=true)
 	private String name;
 
 	@Column(nullable = false)
@@ -75,6 +75,7 @@ public class Community {
 	@PrePersist
 	public void prePersist() {
 		this.createdDate = new Date();
+		this.updatedDate = new Date();
 	}
 
 	public Long getId() {

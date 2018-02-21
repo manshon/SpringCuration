@@ -1,6 +1,6 @@
 package com.example.demo.web;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.example.demo.model.Article;
 import com.example.demo.model.Community;
 import com.example.demo.model.User;
+import com.example.demo.repository.ArticleRepository;
 import com.example.demo.repository.CommunityRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.CommunityService;
@@ -25,16 +26,19 @@ import com.example.demo.service.UserService;
 public class DetailCommunity {
 
 	@Autowired
-	CommunityRepository repository;
+	private CommunityRepository repository;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	CommunityService service;
+	private ArticleRepository articleRepository;
 
 	@Autowired
-	UserService userService;
+	private CommunityService service;
+
+	@Autowired
+	private UserService userService;
 
 
 	@GetMapping("/detailCommunity/{communityId}")
@@ -47,12 +51,18 @@ public class DetailCommunity {
 //			Community community = repository.findById(communityId);
 //		}
 		Community community = repository.findById(communityId);
-		Set<Article> articles = community.getArticles();
-		boolean isFollow = userService.isFollowAnyCommunity(user.getId());
+
+//		Set<Article> articles = community.getArticles();
+//		List<Article> articleList = new ArrayList<>(articles);
+//
+//		Collections.sort(articleList, new ArticleIdComparator());
+		List<Article> articleList = articleRepository.findTop5ByCommunityIdOrderByUpdatedDateDesc(communityId);
+
+		boolean isFollow = userService.isFollowCommunity(user.getId(), communityId);
 
 		model.addAttribute("community", community);
 		model.addAttribute("isFollow", isFollow);
-		model.addAttribute("articles", articles);
+		model.addAttribute("articles", articleList);
 		model.addAttribute("user", user);
 		return "detailCommunity";
 	}

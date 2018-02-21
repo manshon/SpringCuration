@@ -70,28 +70,33 @@
                   </div>
                 </div>
         				<div class="form-group">
+        				      <label th:text="タイトル"></label>
     						  <input type="text" class="form-control" id="title" name="title" placeholder="タイトル" th:value="${article.title }" required>
     					  </div>
     					<div class="form-group">
-    						<input type="text" class="form-control" id="tags" name="tags" placeholder="タグ" th:value="${articleTags}" th:rows="5">
+    					    <label th:text="タグ"></label>
+    						<input type="text" class="form-control" id="tags" name="tags" placeholder="タグ" th:value="${articleTags}" >
     					</div>
                         <div class="form-group">
-                        <textarea class="form-control" id="quotes" name="quotes"  placeholder="引用url" th:value="${articleUrls}"></textarea>
+                            <label th:text="引用url"></label>
+                            <textarea class="form-control" id="quotes" name="quoteUrls"  placeholder="引用url（複数ある場合はそれぞれ改行する）"  th:text="${articleUrls}" th:rows="8"></textarea>
                         </div>
     					<div class="form-group">
+    					    <label th:text="公開・非公開"></label>
 		                <select th:if="${article.conditions == 1}" class="form-control" id="conditions" name="conditions">
-		                  <option th:value=1 selected="selected">public</option>
+		                  <option th:value=1 selected="selected">公開</option>
 		                  <option th:value=2>private</option>
 		                 </select>
 		                 <select th:if="${article.conditions == 2}" class="form-control" id="conditioins" name="conditions">
 		                  <option th:value=1>public</option>
-		                  <option th:value=2 selected="selected">private</option>
+		                  <option th:value=2 selected="selected">非公開</option>
 		                  </select>
     					</div>
                         <div class="form-group">
-                        <textarea class="form-control" id="body" name="content" placeholder="本文(1000文字以内)" maxlength="1000" th:rows="9" th:text="${article.content }"></textarea>
+                            <label th:text="内容"></label>
+                            <textarea class="form-control" id="body" name="content" placeholder="本文(1000文字以内)" maxlength="1000" th:rows="22" th:text="${article.content }"></textarea>
                         </div>
-            <a href="DestroyArticle?articleId=${article.id }" class="btn btn-danger pull-right">削除する</a>
+            <a th:href="@{'/deleteArticle/' + ${article.id }}" class="btn btn-danger pull-right">削除する</a>
             <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right" style="margin-right:10px;">編集する</button>
             </form>
         </div>

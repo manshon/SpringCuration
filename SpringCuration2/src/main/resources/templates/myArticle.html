@@ -58,28 +58,22 @@
       </div>
     </nav>
 
-        <div class="col-lg-2 col-sm-2">
-
-        </div>
-
-        <!-- main -->
-        <div class="main col-lg-8 col-sm-2">
 
 
-               <div th:each="article : ${articleList}" class="col-xs-6 col-lg-4 " >
-               <div class="well" style="border:solid 1px #c0c0c0">
+               <div th:each="article : ${articleList}" class="col-xs-6 col-lg-4 " style="height:300px; margin-top:40px;">
+               <div class="well" style="border:solid 1px #c0c0c0; height:280px;">
                  <h2 th:text="${article.title }"></h2>
+                 <h4 th:if="${article.conditions == 2}" th:text="非公開" style="color:red;"></h4>
+                 <h4 th:if="${article.conditions == 1}" th:text="公開" style="color:blue;"></h4>
                  <!-- <h5 th:if="${article.likes}" th:inline="text">[[${article.likes }]]いいね</h5> -->
                  <p class="article-content" th:text="${article.content }"></p>
-                  <p>
-	                <a class="btn btn-info" th:href="@{'/detailArticle/' + ${article.id}}" role="button">詳細 »</a>
-	                <a class="btn btn-primary" th:href="@{'/editArticle/' + ${article.id }}" role="button">編集</a>
-	                <a class="btn btn-danger pull-right" th:href="@{'/deleteArticle/' + ${article.id }}" role="button">削除</a>
-                </p>
+                  <div >
+	                <a class="btn btn-info" th:href="@{'/detailArticle/' + ${article.id}}" role="button" style="position:absolute; left:50px; bottom:30px;">詳細 »</a>
+	                <a class="btn btn-primary" th:href="@{'/editArticle/' + ${article.id }}" role="button" style="position:absolute; left:120px; bottom:30px;">編集</a>
+	                <a class="btn btn-danger pull-right" th:href="@{'/deleteArticle/' + ${article.id }}" role="button" style="position:absolute; right:50px; bottom:30px;">削除</a>
+                </div>
                 </div>
                </div>
-
-        </div><!--  main -->
 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script>

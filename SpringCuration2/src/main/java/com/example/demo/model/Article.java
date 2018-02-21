@@ -63,7 +63,6 @@ public class Article {
 	private Set<ArticleTags> tags;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "articleId")
 	private Set<Comment> comment;
 
 	@ManyToOne
@@ -74,8 +73,7 @@ public class Article {
 	@JoinColumn(insertable = false, updatable = false, name = "communityId")
 	private Community belongCommunity;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH,
-			CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
 	@JoinTable(name = "likes", joinColumns = @JoinColumn(name = "artilceId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
 	private Set<User> likeUsers;
 
@@ -102,7 +100,9 @@ public class Article {
 	@PrePersist
 	public void prePersist() {
 		this.createdDate = new Date();
+		this.updatedDate = new Date();
 	}
+
 
 	public Long getId() {
 		return id;
@@ -243,13 +243,21 @@ public class Article {
 	}
 
 	public void addLikeUser(User tempUser) {
-		if(tempUser != null) {
-			if(likeUsers == null) {
+		if (tempUser != null) {
+			if (likeUsers == null) {
 				likeUsers = new HashSet<>();
 			}
 			likeUsers.add(tempUser);
 		}
 	}
 
+	public void addComment(Comment tempComment) {
+		if (tempComment != null) {
+			if (comment == null) {
+				comment = new HashSet<>();
+			}
+			comment.add(tempComment);
+		}
+	}
 
 }

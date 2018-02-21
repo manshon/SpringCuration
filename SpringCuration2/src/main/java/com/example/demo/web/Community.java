@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,14 +46,13 @@ public class Community {
 	@Autowired
 	ArticleService articleService;
 
+
 	@GetMapping({ "/community", "/community/{communityId}" })
 	public String home(@PathVariable(name = "communityId", required = false) Long communityId, HttpSession session,
-			Model model) {
+			Model model, Pageable pageable) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails principal = (UserDetails) auth.getPrincipal();
 		User user = repository.findByName(principal.getUsername());
-
-//		User user = (User) session.getAttribute("user");
 
 		List<com.example.demo.model.Community> adminCommunityList = null;
 		List<com.example.demo.model.Community> followCommunityList = null;
@@ -75,11 +76,14 @@ public class Community {
 			}
 		}
 
+		Page<Article> articlePage = null;
 		// searchArticleからredirectされたときはsessionに保存されているarticleListを取ってくる
-		if(session.getAttribute("articleList") != null) {
-			articleList = (List<Article>) CurationHelper.cutSessionAttribute(session, "articleList");
+		if(session.getAttribute("articlePage") != null) {
+//			articleList = (List<Article>) CurationHelper.cutSessionAttribute(session, "articleList");
+			articlePage = (Page<Article>) CurationHelper.cutSessionAttribute(session, "articlePage");
 		}else {
-			articleList = articleRepository.findByCommunityId(communityId);
+			articleList = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId);
+			articlePage = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId, pageable);
 		}
 
 		for(Article tempArticle : repository.findOne(user.getId()).getLikeArticles()) {
@@ -92,12 +96,17 @@ public class Community {
 		followCommunityList = communityRepository.findByFollowUsersOrderByIdAsc(user);
 
 		model.addAttribute("likeArticleIdList", likeArticleIdList);
-		model.addAttribute("articleList", articleList);
+//		model.addAttribute("articleList", articleList);
 		model.addAttribute("selectedCommunityId", communityId);
 		model.addAttribute("communityId", communityId);
 		model.addAttribute("adminCommunityList", adminCommunityList);
 		model.addAttribute("communityList", followCommunityList);
 		model.addAttribute("user", user);
+
+		model.addAttribute("page", articlePage);
+		model.addAttribute("article", articlePage.getContent());
+		model.addAttribute("url", "/community/" + String.valueOf(communityId));
+
 		return "community";
 
 	}

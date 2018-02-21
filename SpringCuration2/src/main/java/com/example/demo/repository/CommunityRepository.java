@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.model.Article;
 import com.example.demo.model.Community;
 import com.example.demo.model.User;
 
 @Repository
 public interface CommunityRepository extends JpaRepository<Community, Long>, JpaSpecificationExecutor<Community> {
 	public List<Community> findByAdminId(Long id);
+
+	public Community findByName(String communityName);
 
 	@Query(value = "SELECT * FROM community ORDER BY RAND() LIMIT 20", nativeQuery = true)
 	public List<Community> find20RandomCommunity();
@@ -28,6 +31,8 @@ public interface CommunityRepository extends JpaRepository<Community, Long>, Jpa
 //	public List<Community> findByUserId(Long userId);
 
 	public Community findById(Long id);
+
+	public Community findByArticles(Article article);
 
 	public void deleteById(Long id);
 

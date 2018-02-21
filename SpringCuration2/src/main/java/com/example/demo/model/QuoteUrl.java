@@ -19,8 +19,8 @@ public class QuoteUrl {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false)
-	private Long articleId;
+//	@Column(nullable = false)
+//	private Long articleId;
 
 	@Column(nullable = false)
 	private String url;
@@ -52,14 +52,6 @@ public class QuoteUrl {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getArticleId() {
-		return articleId;
-	}
-
-	public void setArticleId(Long articleId) {
-		this.articleId = articleId;
 	}
 
 	public String getUrl() {

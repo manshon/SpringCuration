@@ -21,95 +21,107 @@ import com.example.demo.security.LoginUserDetails;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository repository;
+	@Autowired
+	private UserRepository repository;
 
-    @Autowired
-    private CommunityRepository communityRepository;
+	@Autowired
+	private CommunityRepository communityRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-//	private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
-//
-//	private SessionFactory sessionFactory;
-//
-//	public void setSessionFactory(SessionFactory sf){
-//		this.sessionFactory = sf;
-//	}
-
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (username == null || "".equals(username)) {
-            throw new UsernameNotFoundException("Username is empty");
-        }
-
-        User user = repository.findByName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found: " + username);
-        }
-
-        return new LoginUserDetails(user);
-    }
-
-    @Transactional
-    public void registerAdmin(String username, String password) {
-        User user = new User(username, passwordEncoder.encode(password));
-//        user.setAdmin(true);
-        repository.save(user);
-    }
-
-    @Transactional
-    public void registerUser(String username, String password) {
-        User user = new User(username, passwordEncoder.encode(password));
-        repository.save(user);
-    }
-
-//    @Transactional
-//    public void editUser(String username, String password) {
-//    		User user = new User(username, passwordEncoder.encode(password));
-//    		repository
-//
-//    }
-
-    @Transactional
-	public void updateUser(String password, Long userId) {
-    		repository.updateUser(password, userId);
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
-    @Transactional
-    public boolean isFollowAnyCommunity(Long userId) {
-    		User user = repository.findById(userId);
-    		Set<Community> community = user.getFollowCommunities();
-    		if(!community.isEmpty()) {
-    			return true;
-    		}else {
-    			return false;
-    		}
-    }
+	// private static final Logger logger =
+	// LoggerFactory.getLogger(UserRepository.class);
+	//
+	// private SessionFactory sessionFactory;
+	//
+	// public void setSessionFactory(SessionFactory sf){
+	// this.sessionFactory = sf;
+	// }
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		if (username == null || "".equals(username)) {
+			throw new UsernameNotFoundException("Username is empty");
+		}
 
-    @Transactional
-    public void followCommunity(Long userId, Long communityId) {
-    		User user = repository.findById(userId);
-    		Community community = communityRepository.findById(communityId);
-    		Set<Community> followedCommunity = user.getFollowCommunities();
+		User user = repository.findByName(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found: " + username);
+		}
 
-    		user.addFollowCommunity(community);
-    		community.addUser(user);
-    		repository.save(user);
-    		communityRepository.save(community);
-    }
+		return new LoginUserDetails(user);
+	}
 
-    @Transactional
-    public void unFollowCommunity(Long userId, Long communityId) {
+	@Transactional
+	public void registerAdmin(String username, String password) {
+		User user = new User(username, passwordEncoder.encode(password));
+		// user.setAdmin(true);
+		repository.save(user);
+	}
+
+	@Transactional
+	public void registerUser(String username, String password) {
+		User user = new User(username, passwordEncoder.encode(password));
+		repository.save(user);
+	}
+
+	// @Transactional
+	// public void editUser(String username, String password) {
+	// User user = new User(username, passwordEncoder.encode(password));
+	// repository
+	//
+	// }
+
+	@Transactional
+	public void updateUser(String password, Long userId) {
+		repository.updateUser(password, userId);
+	}
+
+	@Transactional
+	public boolean isFollowAnyCommunity(Long userId) {
+		User user = repository.findById(userId);
+		Set<Community> community = user.getFollowCommunities();
+		if (!community.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Transactional
+	public boolean isFollowCommunity(Long userId, Long communityId) {
+		boolean ret = false;
+		User user = repository.findById(userId);
+		Set<Community> communitySet = user.getFollowCommunities();
+		for(Community community : communitySet) {
+			if(community.getId() == communityId) {
+				ret = true;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	@Transactional
+	public void followCommunity(Long userId, Long communityId) {
+		User user = repository.findById(userId);
+		Community community = communityRepository.findById(communityId);
+		Set<Community> followedCommunity = user.getFollowCommunities();
+
+		user.addFollowCommunity(community);
+		community.addUser(user);
+		repository.save(user);
+		communityRepository.save(community);
+	}
+
+	@Transactional
+	public void unFollowCommunity(Long userId, Long communityId) {
 		User user = repository.findById(userId);
 		Community community = communityRepository.findById(communityId);
 		Set<Community> followedCommunity = user.getFollowCommunities();
@@ -122,23 +134,6 @@ public class UserService implements UserDetailsService {
 		community.setFollowUsers(followUsers);
 		repository.save(user);
 		communityRepository.save(community);
-    }
-
-
+	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
