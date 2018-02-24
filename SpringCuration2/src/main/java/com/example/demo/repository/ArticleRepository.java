@@ -14,13 +14,17 @@ import com.example.demo.model.User;
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> {
 
-	public Page<Article> findByCommunityIdOrderByUpdatedDateDesc(Long communityId, Pageable pageable);
-
 	public List<Article> findByContributorId(Long id);
 
 	public List<Article> findByContributorIdOrderByUpdatedDateDesc(Long id);
 
-	public List<Article> findByCommunityIdOrderByUpdatedDateDesc(Long id);
+	@Query(value="select * from article a join community c on a.community_id = c.id join user_community_follow f on f.community_id = c.id where c.id = ?1 and "
+			+ "f.conditions = ?2",nativeQuery=true)
+	public List<Article> findByCommunityIdAndFollowConditionsOrderByUpdatedDateDesc(Long id, int followCondition);
+
+	@Query(value="select * from article a join community c on a.community_id = c.id join user_community_follow f on f.community_id = c.id join users u on f.user_id = u.id"
+			+ " where c.id = ?1 and u.id = ?2 and f.conditions = ?3 \n#pageable\n",nativeQuery=true)
+	public Page<Article> findByCommunityIdOrderByUpdatedDateDesc(Long communityId, Long userId, int followCondition, Pageable pageable);
 
 	public List<Article> findTop5ByCommunityIdOrderByUpdatedDateDesc(Long id);
 

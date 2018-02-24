@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{/teeth.ico}">
 
-    <title>Create Community</title>
+    <title>Permit User</title>
 
     <!-- Bootstrap core CSS -->
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -18,11 +18,11 @@
     <link th:href="@{/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link th:href="@{/css/jumbotron-narrow.css}" rel="stylesheet">
+    <link th:href="@{/css/starter-template.css}" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="@{/js/ie-emulation-modes-warning.js}"></script>
+    <script src="js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -32,7 +32,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -44,55 +43,52 @@
           </button>
           <ul class="nav navbar-nav navbar-left">
               <li><a class="navbar-brand" href="/user" th:text="${user.name}"></a></li>
-              <li><a class="navbar-brand" th:href="@{/community/}">ホーム</a></li>
+              <li><a class="navbar-brand" href="/community">ホーム</a></li>
           </ul>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="Logout">ログアウト</a></li>
+            <li><a href="/logout">ログアウト</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
+
     <div class="container">
 
-      <div class="container">
-          <div class="center-block">
-          <div class="form-area" style="margin-top:30px;">
-              <form role="form" th:action="@{/createCommunity}" th:object="${SigninForm}" method="post">
-              <br style="clear:both">
-              			<p class="text-center" style="color:red;" th:text="${msg}"></p>
-                          <h3 style="margin-bottom: 25px; text-align: center;">コミュニティを作る</h3>
-          				<div class="form-group">
-          				    <label th:text="コミュニティ名"></label>
-      						<input type="text" class="form-control" id="header" name="name" placeholder="コミュニティ名" required>
-      					</div>
-      					<div class="form-group">
-      					    <label th:text="タグ"></label>
-      						<input type="text" class="form-control" id="tag" name="tags" placeholder="タグ(複数可)" >
-      					</div>
-      					<div class="form-group">
-      					    <label th:text="公開・非公開"></label>
-			                <select class="form-control" id="conditions" name="conditions" >
-			                  <option value=1 selected="selected">public</option>
-			                  <option value=2 >private</option>
-			                </select>
-      					</div>
-                          <div class="form-group">
-                          <textarea class="form-control" type="body" id="body" name="content" placeholder="説明(240文字以内)" maxlength="240" rows="7" required></textarea>
-                              <span class="help-block"><p id="characterLeft" class="help-block "></p></span>
-                          </div>
-
-              <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">作成する</button>
-              </form>
-          </div>
-      </div>
+      <div th:if="${userList == null}" style="margin-top:50px; text-align:center;">
+          <h4 th:text="${msg}"></h4>
       </div>
 
 
-      </div>
+      <div th:if="${userList != null}" class="table-responsive" style="margin-top:20px;">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>承認待ちユーザー</th>
+                        <th>承認・非承認</th>
+                      </tr>
+                    </thead>
+                    <tbody>
 
+<!--                     	 <div th:each="community : ${communityList }">
+ -->	                      <tr th:each="tempUser : ${userList }">
+	                        <td><h5 th:text="${tempUser.name }" ></h5></td>
+	                        <td>
+	                            <form th:action="@{'/permitUser/' + ${community.id } + '/' + ${tempUser.id} + '/1' }" th:method="post" style="display:inline;">
+	                                <button  class="btn btn-info" role="button" >承認</button>
+	                            </form>
+	                            <form th:action="@{'/permitUser/' + ${community.id } + '/' + ${tempUser.id} + '/2' }" th:method="post" style="display:inline;">
+	                                <button class="btn btn-info btn-warning" role="button">非承認</button>
+	                            </form>
+	                        </td>
+	                      </tr>
+<!--                       </div>
+ -->
+                    </tbody>
+                  </table>
+        </div>
     </div><!-- /.container -->
 
 
@@ -101,8 +97,8 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

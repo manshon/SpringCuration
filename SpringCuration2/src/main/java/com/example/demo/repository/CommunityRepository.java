@@ -2,8 +2,11 @@ package com.example.demo.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -36,7 +39,17 @@ public interface CommunityRepository extends JpaRepository<Community, Long>, Jpa
 
 	public void deleteById(Long id);
 
-	public List<Community> findByFollowUsersOrderByIdAsc(User user);
+	@Query(value="select * from community c join user_community_follow f on f.community_id = c.id where f.user_id = ?1 and f.conditions = ?2",nativeQuery=true)
+	public List<Community> findByFollowUsersAndConditionsOrderByIdAsc(User user,int followStatus);
 
+	@Modifying
+	@Transactional
+	@Query(value="update user_community_follow f join users u on f.user_id = u.id join community c on c.id = f.community_id set f.conditions = 1 where c.id = ?1 and u.id = ?2 ",nativeQuery=true)
+	public void permitUser(Long communityId, Long userId);
+
+	@Modifying
+	@Transactional
+	@Query(value="update user_community_follow f join users u on f.user_id = u.id join community c on c.id = f.community_id set f.conditions = 2 where community_id = ?1 and user_id = ?2 ",nativeQuery=true)
+	public void unpermitUser(Long communityId, Long userId);
 
 }

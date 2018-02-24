@@ -65,14 +65,19 @@
               			<p class="text-center" style="color:red;" th:text="${msg}"></p>
                           <h3 style="margin-bottom: 25px; text-align: center;">コミュニティを作る</h3>
           				<div class="form-group">
+          				    <label th:text="コミュニティ名"></label>
       						<input type="text" class="form-control" id="header" name="name" placeholder="コミュニティ名" required>
       					</div>
       					<div class="form-group">
+      					    <label th:text="タグ"></label>
       						<input type="text" class="form-control" id="tag" name="tags" placeholder="タグ(複数可)" >
       					</div>
       					<div class="form-group">
-
-      						<!-- <input type="text" class="form-control" id="condition" name="condition" placeholder="condition" required> -->
+      					    <label th:text="公開・非公開"></label>
+			                <select class="form-control" id="conditions" name="conditions" >
+			                  <option value=1 selected="selected">public</option>
+			                  <option value=2 >private</option>
+			                </select>
       					</div>
                           <div class="form-group">
                           <textarea class="form-control" type="body" id="body" name="content" placeholder="説明(240文字以内)" maxlength="240" rows="7" required></textarea>

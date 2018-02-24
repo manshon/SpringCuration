@@ -48,7 +48,7 @@ public class SearchArticle {
 			session.setAttribute("articlePage", articlePage);
 
 		}else {
-			Page<Article> articlePage = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId,pageable);
+			Page<Article> articlePage = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId, user.getId(), 1,pageable);
 			session.setAttribute("articlePage", articlePage);
 
 		}

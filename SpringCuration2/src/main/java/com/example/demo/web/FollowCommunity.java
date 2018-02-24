@@ -40,7 +40,13 @@ public class FollowCommunity {
 		if (userRepository.existsByIdAndFollowCommunities(user.getId(), community)) {
 			userService.unFollowCommunity(user.getId(), communityId);
 		} else {
+			// followしていないときの処理
 			userService.followCommunity(user.getId(), communityId);
+			// 承認機能がないコミュニティはそのままフォロー
+			// 承認機能のがあるコミュニティは承認待ち
+			if(community.getConditions() == 0) {
+				communityRepository.permitUser(communityId, user.getId());
+			}
 		}
 
 		model.addAttribute("user", user);

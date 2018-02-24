@@ -63,7 +63,14 @@ public class Community {
 		if(communityId == null ) {
 			if (userService.isFollowAnyCommunity(user.getId())) {
 				followCommunityList = new ArrayList<>(repository.findById(user.getId()).getFollowCommunities());
-				Long firstCommunityId = followCommunityList.get(0).getId();
+				Long firstCommunityId = 0L;
+				// followStatusのチェック
+				for(com.example.demo.model.Community tempCommunity: followCommunityList) {
+					if(tempCommunity.getConditions() == 1) {
+						firstCommunityId = tempCommunity.getId();
+						break;
+					}
+				}
 				return "redirect:/community/" + String.valueOf(firstCommunityId);
 	//			communityId = firstCommunityId;
 			} else if (communityRepository.existsByAdminId(user.getId())) {
@@ -82,8 +89,8 @@ public class Community {
 //			articleList = (List<Article>) CurationHelper.cutSessionAttribute(session, "articleList");
 			articlePage = (Page<Article>) CurationHelper.cutSessionAttribute(session, "articlePage");
 		}else {
-			articleList = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId);
-			articlePage = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId, pageable);
+			articleList = articleRepository.findByCommunityIdAndFollowConditionsOrderByUpdatedDateDesc(communityId, 1);
+			articlePage = articleRepository.findByCommunityIdOrderByUpdatedDateDesc(communityId, user.getId(), 1, pageable);
 		}
 
 		for(Article tempArticle : repository.findOne(user.getId()).getLikeArticles()) {
@@ -93,16 +100,15 @@ public class Community {
 		adminCommunityList = communityService.findAdminCommunity(user.getId());
 
 //		followCommunityList = new ArrayList<>(user.getFollowCommunities());
-		followCommunityList = communityRepository.findByFollowUsersOrderByIdAsc(user);
+		followCommunityList = communityRepository.findByFollowUsersAndConditionsOrderByIdAsc(user, 1);
 
 		model.addAttribute("likeArticleIdList", likeArticleIdList);
 //		model.addAttribute("articleList", articleList);
 		model.addAttribute("selectedCommunityId", communityId);
 		model.addAttribute("communityId", communityId);
 		model.addAttribute("adminCommunityList", adminCommunityList);
-		model.addAttribute("communityList", followCommunityList);
+		model.addAttribute("followCommunityList", followCommunityList);
 		model.addAttribute("user", user);
-
 		model.addAttribute("page", articlePage);
 		model.addAttribute("article", articlePage.getContent());
 		model.addAttribute("url", "/community/" + String.valueOf(communityId));

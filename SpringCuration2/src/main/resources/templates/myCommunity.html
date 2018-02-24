@@ -71,6 +71,7 @@
               <p>
                 <a class="btn btn-info" th:href="@{'/detailCommunity/' + ${community.id}}" role="button">詳細 »</a>
                 <a class="btn btn-primary" th:href="@{'/editCommunity/' + ${community.id}}" role="button">編集 »</a>
+                <a class="btn btn-warning" th:href="@{'/permitUser/' + ${community.id}}" role="button">承認 »</a>
                 <a class="btn btn-danger pull-right" th:href="@{'/deleteCommunity/' + ${community.id }}" role="button">削除 »</a>
               </p>
               </div>

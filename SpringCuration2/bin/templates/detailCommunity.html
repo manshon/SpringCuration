@@ -50,6 +50,7 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
+              <li th:if="${community.adminId == user.id}"><a th:href="@{'/permitUser/' + ${community.id}}" th:text="ユーザー承認画面"></a></li>
               <li><a href="/logout">ログアウト</a></li>
             </ul>
           </div>
@@ -62,8 +63,9 @@
         <div th:if="${community.admin.name != user.name }">
           <form th:action="@{/followCommunity}" method="post">
             <input type="hidden" name="communityId" th:value="${community.id }">
-              <button class="btn btn-lg btn-info" th:if="${isFollow }">アンフォロー</button>
+              <button class="btn btn-lg btn-info" th:if="${isFollow && followStatus == 1 }">アンフォロー</button>
               <button class="btn btn-lg btn-success" th:if="${!isFollow }">フォロー</button>
+              <button class="btn btn-lg btn-warning" th:if="${followStatus == 0 }">承認待ち</button>
           </form>
         </div>
           <form action="EditCommunityDetail" method="get" th:if="${community.admin.equals(user.name) }">

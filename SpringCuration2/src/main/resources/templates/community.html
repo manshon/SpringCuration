@@ -66,7 +66,7 @@
         <!-- sidebar -->
         <div class="col-sm-2 col-md-2 sidebar">
            <p class="text-center">フォローしているコミュニティ</p>
-           <ul th:each="community : ${communityList}" class="nav nav-sidebar">
+           <ul th:each="community : ${followCommunityList}" class="nav nav-sidebar">
                <li th:if="${selectedCommunityId == community.id }" class="active">
                  <a th:href="@{'/community/' + ${community.id}}" th:inline="text">[[${community.name}]]</a>
                </li>

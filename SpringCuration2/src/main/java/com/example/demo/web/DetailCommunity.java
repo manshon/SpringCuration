@@ -60,6 +60,9 @@ public class DetailCommunity {
 
 		boolean isFollow = userService.isFollowCommunity(user.getId(), communityId);
 
+		Long followStatus = userRepository.getFollowCommunityStatus(user.getId(), communityId);
+
+		model.addAttribute("followStatus", followStatus);
 		model.addAttribute("community", community);
 		model.addAttribute("isFollow", isFollow);
 		model.addAttribute("articles", articleList);

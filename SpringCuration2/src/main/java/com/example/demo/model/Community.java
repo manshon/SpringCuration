@@ -38,6 +38,9 @@ public class Community {
 	@Column(nullable = false)
 	private String content;
 
+	@Column(nullable = false)
+	private int conditions;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(updatable = false)
 	private Date createdDate;
@@ -108,6 +111,14 @@ public class Community {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public int getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(int conditions) {
+		this.conditions = conditions;
 	}
 
 	public Date getCreatedDate() {

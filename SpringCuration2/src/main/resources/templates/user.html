@@ -61,6 +61,7 @@
 
       </div>
       <div class="information col-sm-6 col-lg-6 ">
+        <p th:text="${#dates.format(new java.util.Date(), 'yyyy/MM/dd ')}"></p>
       	<p th:text="${msg}"></p>
         <h1>ユーザー情報</h1>
         <ul class="list-group">
